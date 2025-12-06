@@ -1,0 +1,5 @@
+{
+  "name": "MetroMesh Media Tracker",
+  "description": "A real-time dashboard simulating rider tracking in Midtown Manhattan with interactive map markers and unit details.",
+  "requestFramePermissions": []
+}
