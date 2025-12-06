@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onDisableSimulator, is
       <div className="flex flex-col">
         <h1 className="text-gray-900 font-bold text-lg leading-tight">MetroMesh Media</h1>
         <div className="flex items-center gap-2">
-           <span className="text-gray-500 text-sm font-medium">Tracker</span>
+           <span className="text-gray-500 text-sm font-medium">Dashboard</span>
            {isSimulatorActive && (
              <span className="flex items-center gap-1 bg-orange-100 text-orange-700 text-xs px-2 py-0.5 rounded-full font-bold border border-orange-200">
                <AlertCircle size={10} />
