@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, Maximize, AlertCircle } from 'lucide-react';
+import { Search, Maximize } from 'lucide-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import MapBoard from './components/MapBoard';
@@ -23,6 +23,8 @@ const App: React.FC = () => {
   // Simulator UI State
   const [isSimulatorModalOpen, setIsSimulatorModalOpen] = useState(false);
   const [isSimulatorModeActive, setIsSimulatorModeActive] = useState(false);
+  const [simulatorDuration, setSimulatorDuration] = useState<number>(4);
+  const [simulatorPromotion, setSimulatorPromotion] = useState<number>(0);
 
   // Ref to access the latest units state inside the interval closure
   const unitsRef = useRef(units);
@@ -155,9 +157,11 @@ const App: React.FC = () => {
     setUnits(generateInitialUnits());
     setSelectedId(null);
     setLiveLogs([]);
+    setSimulatorDuration(4);
+    setSimulatorPromotion(0);
   };
 
-  const handleConfirmSimulator = (unitCount: number, selectedNeighborhoods: string[]) => {
+  const handleConfirmSimulator = (unitCount: number, selectedNeighborhoods: string[], durationWeeks: number, promotion: number) => {
     // 1. Calculate units per neighborhood
     if (selectedNeighborhoods.length === 0) return;
     const unitsPerNeighborhood = Math.round(unitCount / selectedNeighborhoods.length);
@@ -178,6 +182,8 @@ const App: React.FC = () => {
     // 3. Deploy units
     setUnits(newSimulatedUnits);
     setSelectedId(null); // Deselect any existing
+    setSimulatorDuration(durationWeeks);
+    setSimulatorPromotion(promotion);
     setIsSimulatorModeActive(true);
   };
 
@@ -193,6 +199,9 @@ const App: React.FC = () => {
         onOpenSimulator={handleOpenSimulator} 
         onDisableSimulator={handleDisableSimulator}
         isSimulatorActive={isSimulatorModeActive}
+        simUnitCount={units.length}
+        simDuration={simulatorDuration}
+        simPromotion={simulatorPromotion}
       />
       
       <main className="flex-1 relative flex">
@@ -212,28 +221,6 @@ const App: React.FC = () => {
 
         {/* Map Container */}
         <div className="flex-1 relative z-0">
-            {/* Search & Expand (Hidden in Simulator Mode) */}
-            {!isSimulatorModeActive && (
-              <>
-                <div className="absolute top-4 right-16 z-[400] w-64 md:w-80">
-                  <div className="bg-white rounded shadow-lg flex items-center px-4 py-2">
-                    <input 
-                      type="text" 
-                      placeholder="Search Rider" 
-                      className="flex-1 bg-transparent border-none outline-none text-gray-700 text-sm"
-                    />
-                    <Search className="text-gray-400 w-4 h-4" />
-                  </div>
-                </div>
-
-                <div className="absolute top-4 right-4 z-[400]">
-                    <button className="bg-white p-2 rounded shadow-lg hover:bg-gray-50">
-                        <Maximize className="w-5 h-5 text-gray-700" />
-                    </button>
-                </div>
-              </>
-            )}
-
             <MapBoard 
                 units={units} 
                 selectedId={selectedId} 
