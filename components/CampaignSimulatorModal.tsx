@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Check, ChevronDown, AlertTriangle } from 'lucide-react';
+import { X, Check, ChevronDown, AlertTriangle, Percent } from 'lucide-react';
 import { NEIGHBORHOODS } from '../constants';
 
 interface CampaignSimulatorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (unitCount: number, selectedNeighborhoods: string[]) => void;
+  onConfirm: (unitCount: number, selectedNeighborhoods: string[], durationWeeks: number, promotion: number) => void;
 }
 
 const CampaignSimulatorModal: React.FC<CampaignSimulatorModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [unitCount, setUnitCount] = useState(150);
   const [selectedNeighborhoods, setSelectedNeighborhoods] = useState<string[]>([]);
   const [duration, setDuration] = useState('4');
+  const [promotion, setPromotion] = useState('0');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +52,7 @@ const CampaignSimulatorModal: React.FC<CampaignSimulatorModalProps> = ({ isOpen,
   };
 
   const handleConfirm = () => {
-    onConfirm(unitCount, selectedNeighborhoods);
+    onConfirm(unitCount, selectedNeighborhoods, parseInt(duration), parseInt(promotion));
     onClose();
   };
 
@@ -159,21 +160,47 @@ const CampaignSimulatorModal: React.FC<CampaignSimulatorModalProps> = ({ isOpen,
             )}
           </div>
 
-          {/* Duration Dropdown */}
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Duration</label>
-            <div className="relative">
-              <select 
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="w-full appearance-none border border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-900 font-medium hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
-              >
-                {[4, 6, 8, 10, 12].map(w => (
-                  <option key={w} value={w}>{w} Weeks</option>
-                ))}
-              </select>
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                 <ChevronDown size={16} className="text-gray-500" />
+          <div className="grid grid-cols-2 gap-4">
+            {/* Duration Dropdown */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Duration</label>
+              <div className="relative">
+                <select 
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className="w-full appearance-none border border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-900 font-medium hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                >
+                  {[4, 6, 8, 10, 12].map(w => (
+                    <option key={w} value={w}>{w} Weeks</option>
+                  ))}
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                   <ChevronDown size={16} className="text-gray-500" />
+                </div>
+              </div>
+            </div>
+
+            {/* Promotion Dropdown */}
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Promotion</label>
+              <div className="relative">
+                <select 
+                  value={promotion}
+                  onChange={(e) => setPromotion(e.target.value)}
+                  className="w-full appearance-none border border-gray-300 rounded-lg px-4 py-3 bg-white text-gray-900 font-medium hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                >
+                  <option value="0">No Discount</option>
+                  <option value="10">10% Off</option>
+                  <option value="15">15% Off</option>
+                  <option value="20">20% Off</option>
+                  <option value="25">25% Off</option>
+                  <option value="30">30% Off</option>
+                  <option value="35">35% Off</option>
+                  <option value="40">40% Off</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                   <Percent size={16} className="text-gray-500" />
+                </div>
               </div>
             </div>
           </div>
