@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar';
 import MapBoard from './components/MapBoard';
 import Legend from './components/Legend';
 import CampaignSimulatorModal from './components/CampaignSimulatorModal';
+import LoginScreen from './components/LoginScreen';
 import { 
   generateInitialUnits, 
   isLocationInManhattan, 
@@ -16,6 +17,8 @@ import {
 import { Unit, UnitHistoryLog, UnitStatus } from './types';
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [units, setUnits] = useState<Unit[]>(() => generateInitialUnits());
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [liveLogs, setLiveLogs] = useState<UnitHistoryLog[]>([]);
@@ -186,6 +189,14 @@ const App: React.FC = () => {
     setSimulatorPromotion(promotion);
     setIsSimulatorModeActive(true);
   };
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  if (!isAuthenticated) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
 
   const selectedUnit = units.find(u => u.id === selectedId) || null;
   const sidebarUnit = selectedUnit ? { ...selectedUnit, history: liveLogs } : null;
